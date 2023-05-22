@@ -252,7 +252,7 @@ Add a new class and routes to serve up Knock-knock jokes - I'm not sure if these
 > 
 > Don't cry it's just a joke
 
-Core: You should have a number of knock-knock jokes available that will be selected by supplying the specific index, this should display the first line of the joke, you would then get the next line by adding `/line2` which would display lines 1 and 2, then add `line3` to the end to display the first 3 lines and so on until you get to the end of the joke.
+Core: You should have a number of knock-knock jokes available that will be selected by supplying the specific index, this should display the first line of the joke, you would then get the next line by adding `/line2` which would display lines 1 and 2, then add `/line3` to the end to display the first 3 lines and so on until you get to the end of the joke.
 
 Extension 1: Can you make it so that you can get the knock-knock jokes to display line by line for a randomly chosen joke?
 

@@ -9,6 +9,7 @@
 1. Fork this repository
 2. Clone your fork to your machine
 3. Open the project in IntelliJ
+4. After building the project, run the `Main` class and use `http://localhost:4000` to test your route implementations
 
 ## Getting Started with Spring
 

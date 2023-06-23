@@ -57,9 +57,15 @@ server:
     include-exception: false
 ```
 
-Although there are now user credentials or passwords in here, at a later point we will add these things, so it is important that they are ignored 
+Although there are no user credentials or passwords in here, at a later point we will add these things, so it is important that they are ignored. In this repo there is an `application.yml.example` file with the correct settings, which we can then rename or copy and rename to create the actual `application.yml` file we want to use. As long as the file name was added to `.gitignore` as we previously did then it shouldn't accidentally end up in GitHub with our secrets in there.
 
-You can delete the ApiApplication.java file and make a new Main class in the same package which is where we'll create our initial code, that will tell Java that we're using Spring and to initialise things accordingly.
+You can delete the `ApiApplication.java` file which is inside the package we have created and make a new Main class in the same package which is where we'll create our initial code, that will tell Java that we're using Spring and to initialise things accordingly. You should also delete the `ApiApplicatonTests.java` file from the corresponding tests folder. Then stage and commit all of your changes so far.
+
+![Location of the ApiApplication.java file](./assets/apiapplicationfile.png)
+
+Once everything has been staged and committed you should see something like this:
+
+![Initial configurations completed](./assets/stagedandcommitted.png)
 
 We're going to build a very simple web based joke machine, when we run the program and go to the correct page to begin with we'll get a random joke sent as plain text which the browser will display. Once we have that working we'll add in some other paths that will result in different data coming back from the "server" (aka the Java program you are writing and will have running on the machine).
 
@@ -91,7 +97,7 @@ We're going to make it so that when we access http://localhost:4000 (ie port 400
 > 
 > A yolkswagen.
 
-Let's create a class called JokeMachine with a `joke` field.
+Let's create a class called JokeMachineController with a `joke` field.
 
 ```java
 package com.booleanuk.api;
@@ -163,9 +169,92 @@ public class JokeMachineController {
 }
 ```
 
+Even with the annotations we can still create and run tests to check that we're getting the expected result when creating a `JokeMachineController` and calling the `getJoke()` method on it. Add a new class called `JokeMachineControllerTest` to the `com.booleanuk.api` package in tests and give it the following code (if you've modified the joke you'll need to use the modified joke in your test).
+
+```java
+package com.booleanuk.api;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+
+class JokeMachineControllerTest {
+    @Test
+    void testGetJoke() {
+        JokeMachineController theJoke = new JokeMachineController();
+        Assertions.assertEquals("What sort of car does an egg drive?  -  A yolkswagen!!!!!!", theJoke.getJoke());
+    }
+}
+```
+
 ## Exercise
 
-In your pair, find a load more jokes, change the code so that you have multiple jokes stored and then when you access the endpoint, a random joke is chosen and that is the one which is returned to the browser. Paste your code into the #code-examples channel.
+In your pair, find some other jokes, change the code so that you have multiple jokes stored and then when you access the endpoint, a random joke is chosen and that is the one which is returned to the browser. Paste your code into the #code-examples channel.
+
+Extension: How can you test code which has an element of randomness?
+
+## Solution
+
+Here's a solution to adding randomness into the joke machine.
+
+```java
+package com.booleanuk.api;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+@RestController
+@RequestMapping("/jokes")
+public class JokeMachineController {
+    private ArrayList<String> jokes;
+    Random rand;
+
+    public JokeMachineController() {
+        this.jokes = new ArrayList<>();
+        this.jokes.add("What sort of car does an egg drive? - A yolkswagen!!!");
+        this.jokes.add("What's the best thing about Switzerland? - I don't know, but the flag is a big plus.");
+        this.jokes.add("What has more letters than the alphabet? - The post office!");
+        this.jokes.add("How do you make 7 even? - Take away the s!");
+        this.jokes.add("I used to be addicted to soap, but I'm clean now.");
+        this.jokes.add("A guy walked into a bar... and was disqualified from the limbo contest.");
+        this.rand = new Random();
+    }
+
+    @GetMapping
+    public String getJoke() {
+        return this.jokes.get(this.rand.nextInt(this.jokes.size()));
+    }
+}
+```
+
+In order to test this we need a way of making the `Random` class return a predictable series of values. Notice that in the code above we've left the `Random random` member variable as Package Protected rather than setting it to Private, this is deliberate so that I can give it a seed value in my test code which will then cause the random numbers to come out in a predictable order.
+
+Modify the `JokeMachineControllerTest` class so that it resembles this:
+
+```java
+package com.booleanuk.api;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+class JokeMachineControllerTest {
+    @Test
+    void testGetJoke() {
+        JokeMachineController theJoke = new JokeMachineController();
+        theJoke.rand.setSeed(100);
+        Assertions.assertEquals("What's the best thing about Switzerland? - I don't know, but the flag is a big plus.", theJoke.getJoke());
+        Assertions.assertEquals("I used to be addicted to soap, but I'm clean now.", theJoke.getJoke());
+        Assertions.assertEquals("I used to be addicted to soap, but I'm clean now.", theJoke.getJoke());
+        Assertions.assertEquals("What sort of car does an egg drive? - A yolkswagen!!!", theJoke.getJoke());
+    }
+}
+```
+
+You may need to experiment to find which values the seed causes the random number generator to iterate through, so that you can find the order in which the jokes are returned. There are other ways to test code which depends on Random but this is a quick and dirty one for now (most other suggestions involve creating a wrapper for the Random class and using that instead Random directly).
 
 ## Adding further routes
 
@@ -212,6 +301,18 @@ public class JokeMachineController {
 
 Going to http://localhost:4000/jokes/number should show you the number of jokes you have.
 
+Add a test to the `JokeMachineControllerTest` class to also test the method.
+
+```java
+    @Test
+    void testNumberOfJokes() {
+        JokeMachineController theJoke = new JokeMachineController();
+        Assertions.assertEquals(6, theJoke.numberOfJokes());
+    }
+```
+
+If you have a different number of jokes you will need to modify the test accordingly. How could you make things more flexible and easier to test?
+
 To make it so that we can access a specific joke we need to be able to pass in a number as part of the URL, which is then treated as a variable. We can do that as follows:
 
 ```java
@@ -253,7 +354,7 @@ public class JokeMachineController {
     }
 
     @GetMapping("/number/{index}")
-    public String getSpecificJoke(@PathVariable (name = "index") int index) {
+    public String getSpecificJoke(@PathVariable int index) {
         return this.jokes.get(index);
     }
 }
@@ -261,7 +362,19 @@ public class JokeMachineController {
 
 Choosing the index of one of the existing jokes should now result in it being displayed, however if the index is too big (10 for instance) you would get an error.
 
-We can fix this by checking the number being passed in and returning a message if it is not a valid index into the ArrayList
+You can test that the correct values are returned by adding a test to the `JokeMachineControllerTest` class to do exactly that, notice the annotation is ignored by the calling code.
+
+```java
+    @Test
+    void testGetSpecificJoke() {
+        JokeMachineController theJoke = new JokeMachineController();
+        Assertions.assertEquals("What's the best thing about Switzerland? - I don't know, but the flag is a big plus.", theJoke.getSpecificJoke(1));
+        Assertions.assertEquals("I used to be addicted to soap, but I'm clean now.", theJoke.getSpecificJoke(4));
+        Assertions.assertEquals("A guy walked into a bar... and was disqualified from the limbo contest.", theJoke.getSpecificJoke(5));
+    }
+```
+
+We can fix the chance of getting an error message when we pass in an index that is too big by checking the number being passed in and returning a message if it is not a valid index into the ArrayList
 
 ```java
     @GetMapping("/number/{index}")
@@ -274,6 +387,17 @@ We can fix this by checking the number being passed in and returning a message i
 ```
 
 Is one solution.
+
+We can test it by adding in another test method to the `JokeMachineControllerTest` class as follows:
+
+```java
+    @Test
+    void testGetSpecificJokeReturnsErrorWhenIndexOutOfRange() {
+        JokeMachineController theJoke = new JokeMachineController();
+        Assertions.assertEquals("What sort of car does an egg drive? - A yolkswagen!!!", theJoke.getSpecificJoke(0));
+        Assertions.assertEquals("I'm sorry please choose a smaller number.", theJoke.getSpecificJoke(10));
+    }
+```
 
 ## Exercise
 
@@ -289,11 +413,11 @@ Add a new class and routes to serve up Knock-knock jokes - I'm not sure if these
 > 
 > Don't cry it's just a joke
 
-Core: You should have a number of knock-knock jokes available that will be selected by supplying the specific index, this should display the first line of the joke, you would then get the next line by adding `/line2` which would display lines 1 and 2, then add `/line3` to the end to display the first 3 lines and so on until you get to the end of the joke.
+Core: You should have a number of knock-knock jokes available that will be selected by supplying the specific index, this should display the first line of the joke, you would then get the next line by adding `/line2` which would display lines 1 and 2, then add `/line3` to the end to display the first 3 lines and so on until you get to the end of the joke. Write tests for these too.
 
-Extension 1: Can you make it so that you can get the knock-knock jokes to display line by line for a randomly chosen joke?
+Extension 1: Can you make it so that you can get the knock-knock jokes to display line by line for a randomly chosen joke? How might you test this?
 
-Extension 2: Use the Spring Boot documentation/Internet searches to investigate adding a custom Error route rather than the existing "White Label" error page that displays when the URL is not one that your application is supplying as a route.
+Extension 2: Use the Spring Boot documentation/Internet searches to investigate adding a custom Error route rather than the existing "White Label" error page that displays when the URL is not one that your application is supplying as a route. Is this testable using JUnit?
 
 
 

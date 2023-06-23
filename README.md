@@ -21,7 +21,43 @@ To create a new Spring Boot project which we can use with IntelliJ (or any other
 
 ![Spring Initializr Page](./assets/spring-initializr.png)
 
-Unzip the resulting file where you want the project to live, rename the folder to something sensible and open the folder as a new project in IntelliJ, once Gradle Sync has completed you will be good to go. The versions in this repo are slightly older than the ones in the new project but both should work equally as well.
+Unzip the resulting file where you want the project to live, rename the folder to something sensible and open the folder as a new project in IntelliJ, once Gradle Sync has completed you will be almost good to go. The versions in this repo are slightly older than the ones in the new project but both should work equally as well. If you want to use this folder as a git repository (that you can then push to GitHub) then you will need to initialise it as such. To do that open the `terminal` and make sure you are in the top level folder of the project. Then type 
+
+```
+git init
+``` 
+
+at the command line to turn the project and its subdirectories into a git project. Unless you have configured it to do something different the initial branch will be named `master` but GitHub now uses `main` for the name of the initial branch so we need to rename the branch, to do this we need to type:
+
+```
+git branch -m main
+```
+
+which will rename it to `main`.
+
+There should be a `.gitignore` file which has some common settings already, but we're going to add a new one at the bottom to ensure that we don't accidentally share credentials with GitHub at a later point.
+
+Open `.gitignore` and add the following at the bottom of it:
+
+``` 
+### Personal ###
+application.yml
+```
+
+Let's add some configuration to the repo so that when we start the application it will know which port to listen on along with a few other bits. Go to the `main` folder which is inside the `src` folder. In there you should see two folders `java` and `resources`. Open the `resources` one, there are probably two empty folders and an empty file in there called `application.properties`, you can safely delete all three of these.
+
+Then create a new file in their called `application.yml` which we will use to hold various configurations that we will use later. Open this new file and add the following text to it:
+```yaml
+server:
+  port: 4000
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: never
+    include-exception: false
+```
+
+Although there are now user credentials or passwords in here, at a later point we will add these things, so it is important that they are ignored 
 
 You can delete the ApiApplication.java file and make a new Main class in the same package which is where we'll create our initial code, that will tell Java that we're using Spring and to initialise things accordingly.
 

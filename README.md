@@ -417,7 +417,7 @@ Core: You should have a number of knock-knock jokes available that will be selec
 
 Extension 1: Can you make it so that you can get the knock-knock jokes to display line by line for a randomly chosen joke? How might you test this?
 
-Extension 2: Use the Spring Boot documentation/Internet searches to investigate adding a custom Error route rather than the existing "White Label" error page that displays when the URL is not one that your application is supplying as a route. Is this testable using JUnit?
+Extension 2: Use the Spring Boot documentation/Internet searches to investigate returning error codes and your own message if they visit a non-existent endpoint.
 
 
 

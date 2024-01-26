@@ -417,7 +417,7 @@ Core: You should have a number of knock-knock jokes available that will be selec
 
 Extension 1: Can you make it so that you can get the knock-knock jokes to display line by line for a randomly chosen joke? How might you test this?
 
-Extension 2: Use the Spring Boot documentation/Internet searches to investigate returning error codes and your own message if they visit a non-existent endpoint.
+Extension 2: Use the Spring Boot documentation/Internet searches to investigate returning error codes and your own message if the user visits a non-existent endpoint.
 
 
 

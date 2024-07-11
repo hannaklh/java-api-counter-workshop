@@ -189,7 +189,7 @@ class JokeMachineControllerTest {
 
 ## Exercise
 
-In your pair, find some other jokes, change the code so that you have multiple jokes stored and then when you access the endpoint, a random joke is chosen and that is the one which is returned to the browser. Paste your code into the #code-examples channel.
+In your pairs, find some other jokes, change the code so that you have multiple jokes stored and then when you access the endpoint, a random joke is chosen and that is the one which is returned to the browser. Paste your code into the #code-examples channel.
 
 Extension: How can you test code which has an element of randomness?
 
@@ -415,9 +415,8 @@ Add a new class and routes to serve up Knock-knock jokes - I'm not sure if these
 
 Core: You should have a number of knock-knock jokes available that will be selected by supplying the specific index, this should display the first line of the joke, you would then get the next line by adding `/line2` which would display lines 1 and 2, then add `/line3` to the end to display the first 3 lines and so on until you get to the end of the joke. Write tests for these too.
 
-Extension 1: Can you make it so that you can get the knock-knock jokes to display line by line for a randomly chosen joke? How might you test this?
+Extension: Can you make it so that you can get the knock-knock jokes to display line by line for a randomly chosen joke? How might you test this?
 
-Extension 2: Use the Spring Boot documentation/Internet searches to investigate returning error codes and your own message if the user visits a non-existent endpoint.
 
 
 

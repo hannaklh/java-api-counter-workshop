@@ -15,42 +15,35 @@ public class CounterShopControllerTest {
     @Test
     public void shouldViewFirstLine() {
         CounterShopController jokes = new CounterShopController();
-        int index = 0;
-        assertEquals(jokes.getJokes().get(index)[0], jokes.getFirstLine(index));
+        int index = 1;
+        assertEquals("Knock, knock.<br>", jokes.getFirstLine(index));
 
     }
     @Test
     public void shouldViewSecondLine() {
         CounterShopController jokes = new CounterShopController();
         int index = 0;
-        assertEquals(jokes.getIndex(index)+jokes.getIndex(index), jokes.getSecondLine(index));
+        assertEquals("Knock, knock.<br>Who's there?<br>", jokes.getSecondLine(index));
     }
     @Test
     public void shouldViewThirdLine() {
         CounterShopController jokes = new CounterShopController();
-        int index = 0;
-        assertEquals(jokes.getIndex(index)+jokes.getIndex(index)+jokes.getIndex(index), jokes.getSecondLine(1));
+        int index = 4;
+        assertEquals("Knock, knock.<br>Who's there?<br>Atch.<br>", jokes.getThirdLine(index));
 
     }
     @Test
     public void shouldViewFourthLine() {
         CounterShopController jokes = new CounterShopController();
-        int index = 0;
-        assertEquals(jokes.getIndex(index)+jokes.getIndex(index)+jokes.getIndex(index)+jokes.getIndex(index), jokes.getSecondLine(1));
+        int index = 3;
+        assertEquals("Knock, knock.<br>Who's there?<br>Tank.<br>Tank who?<br>", jokes.getFourthLine(index));
 
     }
     @Test
     public void shouldViewFifthLine() {
         CounterShopController jokes = new CounterShopController();
-        int index = 0;
-        assertEquals(jokes.getIndex(index)+jokes.getIndex(index)+jokes.getIndex(index)+jokes.getIndex(index)+jokes.getIndex(index), jokes.getFifthLine(1));
-
-    }
-    @Test
-    public void shouldViewIndex() {
-        CounterShopController jokes = new CounterShopController();
-        int index = 0;
-        assertEquals("Knock, knock", jokes.getIndex(index));
+        int index = 2;
+        assertEquals("Knock, knock.<br>Who's there?<br>Boo.<br>Boo who?<br>Don’t cry, it’s just a joke!", jokes.getFifthLine(index));
 
     }
 

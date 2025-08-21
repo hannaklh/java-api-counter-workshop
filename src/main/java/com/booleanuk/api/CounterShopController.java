@@ -28,6 +28,10 @@ public class CounterShopController {
     }
     @GetMapping("/{index}")
     public String getFirstLine(@PathVariable int index) {
+        if (index<0 || index>=jokes.size()){
+            return "Number must be between 0 and "+ (this.jokes.size()-1);
+        }
+
         return this.getJokes().get(index)[0];
     }
     @GetMapping("/{index}/line2")
